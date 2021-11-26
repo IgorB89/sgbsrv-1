@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 
 import { Flight } from '../../entities/flight';
-import { FlightService } from './flight.service';
+import { FlightService } from '../shared/services/flight.service';
+import { pattern } from '../../shared/global';
 
 @Component({
   selector: 'flight-search',
@@ -9,10 +10,11 @@ import { FlightService } from './flight.service';
   styleUrls: ['./flight-search.component.css']
 })
 export class FlightSearchComponent {
-  from = '';
+  from = 'Graz';
   to = 'Hamburg';
   flights: Flight[] = [];
-  selectedFlight: Flight;
+  flightToEdit: Flight;
+  pattern = pattern;
 
   message: string;
 
@@ -34,14 +36,10 @@ export class FlightSearchComponent {
     });
   }
 
-  select(f: Flight): void {
-    this.selectedFlight = f;
-  }
-
-  save(): void {
-    this.flightService.save(this.selectedFlight).subscribe({
+  /*save(): void {
+    this.flightService.save(this.flightToEdit).subscribe({
       next: (flight) => {
-        this.selectedFlight = flight;
+        this.flightToEdit = flight;
         this.message = 'Success!';
       },
       error: (errResponse) => {
@@ -49,5 +47,12 @@ export class FlightSearchComponent {
         this.message = 'Error!';
       }
     });
+  }*/
+
+  updateFlight(updatedFlight: Flight): void {
+    // console.warn('FlightSearchComponent - updateFlight()');
+    // console.log(updatedFlight);
+
+    this.flights = this.flights.map((flight) => (flight.id === updatedFlight.id ? updatedFlight : flight));
   }
 }
